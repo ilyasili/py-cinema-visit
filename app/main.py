@@ -1,33 +1,25 @@
 from app.cinema.bar import CinemaBar
 from app.cinema.hall import CinemaHall
-from app.people.customer import Customer
 from app.people.cinema_staff import Cleaner
+from app.people.customer import Customer
 
-customers = [
-    {"name": "Bob", "food": "Coca-cola"},
-    {"name": "Alex", "food": "popcorn"}
-]
+customers = [{"name": "Bob", "food": "Coca-cola"},
+             {"name": "Alex", "food": "popcorn"}]
 hall_number = 5
 cleaner_name = "Anna"
 movie = "Madagascar"
 
 
-def cinema_visit(customers: list, hall_number: int, cleaner: str, movie: str):
-    for i in customers:
-        cd = CinemaBar()
-        cd.sell_product(i.get('name'), i.get('food'))
+def cinema_visit(customers: list, hall_number: int,
+                 cleaner: str, movie: str) -> list:
+    customer_instances = []
 
-    cd = CinemaHall(hall_number)
-    cd.movie_session(movie, customers)
+    for customer in customers:
+        cd = Customer(customer.get("name"), customer.get("food"))
+        customer_instances.append(cd)
 
-    for i in customers:
-        cd = Customer(i.get('name'), i.get('food'))
-        cd.watch_movie(movie)
+        CinemaBar.sell_product(product=cd.food, customer=cd)
 
-    print(f'"{movie}" ended.')
-
-    cd = Cleaner(cleaner_name)
-    cd.clean_hall(hall_number)
-    pass
-
-cinema_visit(customers, hall_number, cleaner_name, movie)
+    ch = CinemaHall(hall_number)
+    clean = Cleaner(cleaner)
+    ch.movie_session(movie, customer_instances, clean)
